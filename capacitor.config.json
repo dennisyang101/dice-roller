@@ -1,0 +1,8 @@
+{
+  "appId": "app.diceroller.mobile",
+  "appName": "骰子投擲器",
+  "webDir": "dist",
+  "android": {
+    "backgroundColor": "#101510"
+  }
+}
