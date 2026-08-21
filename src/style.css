@@ -28,6 +28,8 @@ button:disabled { cursor: not-allowed; opacity: .5; }
 .eyebrow { margin: 0 0 8px; color: #d8a938; font-size: .72rem; font-weight: 900; letter-spacing: .22em; }
 h1 { margin: 0; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.08; }
 .intro { margin: 14px 0 30px; color: #aeb7aa; line-height: 1.7; }
+.dice-config summary { margin-bottom: 12px; color: #d8a938; cursor: pointer; font-weight: 800; }
+.dice-config:not([open]) summary { margin-bottom: 0; }
 .dice-groups { display: grid; gap: 10px; }
 
 .dice-row {
@@ -59,7 +61,6 @@ h1 { margin: 0; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.08; }
   overflow: hidden;
   background: radial-gradient(circle at 50% 45%, #304b35, #17271c 65%, #0e160f);
 }
-.table-panel::after { content: ''; position: absolute; inset: 20px; pointer-events: none; border: 1px solid #ffffff12; border-radius: 26px; box-shadow: inset 0 0 80px #0008; }
 #dice-box { position: absolute; inset: 0; }
 #dice-box canvas { width: 100%; height: 100%; }
 .empty-state { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 12px; color: #a5b3a4; pointer-events: none; }
@@ -68,12 +69,10 @@ h1 { margin: 0; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.08; }
 
 .results { position: absolute; z-index: 3; right: 32px; bottom: 32px; width: min(360px, calc(100% - 64px)); padding: 18px 20px; visibility: hidden; opacity: 0; transform: translateY(10px); color: #f8f4e9; background: #101510e8; border: 1px solid #596456; border-radius: 16px; backdrop-filter: blur(12px); transition: .25s ease; }
 .results.is-visible { visibility: visible; opacity: 1; transform: none; }
-.results > div { display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid #3a4438; }
-.results-label { color: #adb7a9; font-size: .85rem; }
-#total { color: #edc356; font-size: 2.7rem; line-height: 1; }
-.results ol { max-height: 190px; margin: 12px 0 0; padding: 0; overflow: auto; list-style: none; }
-.results li { display: flex; justify-content: space-between; gap: 16px; padding: 6px 0; color: #cbd3c8; font-size: .85rem; }
-.results li strong { color: #fff; }
+.results ol { max-height: 190px; margin: 0; padding: 0; overflow: auto; list-style: none; }
+.results li { display: grid; gap: 4px; padding: 8px 0; color: #f8f4e9; font-size: .85rem; }
+.results li span { color: #cbd3c8; }
+.final-total { margin: 12px 0 0; padding-top: 12px; color: #edc356; border-top: 1px solid #3a4438; font-weight: 900; }
 
 @media (max-width: 760px) {
   .app-shell { display: block; }

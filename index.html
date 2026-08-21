@@ -15,8 +15,11 @@
           <p class="intro">自由組合標準 RPG 骰，投擲後自動加總。</p>
         </header>
 
-        <div id="dice-groups" class="dice-groups" aria-label="骰組"></div>
-        <button id="add-group" class="text-button" type="button">＋ 加一組骰子</button>
+        <details id="dice-config" class="dice-config" open>
+          <summary>骰子配置</summary>
+          <div id="dice-groups" class="dice-groups" aria-label="骰組"></div>
+          <button id="add-group" class="text-button" type="button">＋ 加一組骰子</button>
+        </details>
         <p id="validation" class="validation" role="alert"></p>
         <button id="roll-button" class="roll-button" type="button" disabled>載入 3D 骰子…</button>
       </section>
@@ -28,11 +31,8 @@
           <p>準備好後，按下「開始投擲」</p>
         </div>
         <section id="results" class="results" aria-live="polite">
-          <div>
-            <span class="results-label">總點數</span>
-            <strong id="total">—</strong>
-          </div>
           <ol id="result-groups"></ol>
+          <p id="total" class="final-total"></p>
         </section>
       </section>
     </main>

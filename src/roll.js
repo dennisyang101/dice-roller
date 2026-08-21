@@ -1,6 +1,18 @@
 export const ALLOWED_SIDES = [4, 6, 8, 10, 12, 20]
 export const MAX_DICE = 20
 
+export const diceLabel = (sides) => `${sides} 面骰`
+
+export const formatSummary = ({ sides, values, subtotal }) => ({
+  heading: `${values.length} x ${diceLabel(sides)}`,
+  equation: `${values.join(' + ')} = ${subtotal}`,
+})
+
+export const formatFinalTotal = (summary) => {
+  const subtotals = summary.map(({ subtotal }) => subtotal)
+  return `${subtotals.join(' + ')} = ${subtotals.reduce((sum, subtotal) => sum + subtotal, 0)}`
+}
+
 export function validateGroups(groups) {
   if (!groups.length) return '至少需要一組骰子。'
   if (groups.some(({ sides }) => !ALLOWED_SIDES.includes(Number(sides)))) return '只支援標準 RPG 骰。'
@@ -16,9 +28,14 @@ export function toNotation(groups) {
 }
 
 export function summarize(groups, rolls) {
-  const groupIds = [...new Set(rolls.map(({ groupId }) => groupId))]
+  const valuesByGroup = new Map()
+  rolls.forEach(({ groupId, value }) => {
+    if (!valuesByGroup.has(groupId)) valuesByGroup.set(groupId, [])
+    valuesByGroup.get(groupId).push(Number(value))
+  })
+  const values = [...valuesByGroup.values()]
   return groups.map((group, index) => {
-    const values = rolls.filter(({ groupId }) => groupId === groupIds[index]).map(({ value }) => Number(value))
-    return { ...group, values, subtotal: values.reduce((sum, value) => sum + value, 0) }
+    const groupValues = values[index] || []
+    return { ...group, values: groupValues, subtotal: groupValues.reduce((sum, value) => sum + value, 0) }
   })
 }

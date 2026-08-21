@@ -1,10 +1,11 @@
 import DiceBox from '@3d-dice/dice-box'
 import '@3d-dice/dice-box/dist/style.css'
 import './style.css'
-import { ALLOWED_SIDES, MAX_DICE, summarize, toNotation, validateGroups } from './roll.js'
+import { ALLOWED_SIDES, MAX_DICE, diceLabel, formatFinalTotal, formatSummary, summarize, toNotation, validateGroups } from './roll.js'
 
 const elements = {
   groups: document.querySelector('#dice-groups'),
+  config: document.querySelector('#dice-config'),
   add: document.querySelector('#add-group'),
   roll: document.querySelector('#roll-button'),
   validation: document.querySelector('#validation'),
@@ -25,11 +26,9 @@ let rolling = false
 const diceBox = new DiceBox('#dice-box', {
   assetPath: '/assets/',
   themeColor: '#d8a938',
-  scale: 6,
-  gravity: 1.2,
-  throwForce: 6,
-  spinForce: 5,
-  settleTimeout: 6000,
+  enableShadows: false,
+  delay: 5,
+  scale: 5,
 })
 
 function renderGroups() {
@@ -39,7 +38,7 @@ function renderGroups() {
       <label>
         <span>骰型</span>
         <select data-field="sides" aria-label="第 ${index + 1} 組骰型">
-          ${ALLOWED_SIDES.map((value) => `<option value="${value}" ${value === sides ? 'selected' : ''}>d${value}</option>`).join('')}
+          ${ALLOWED_SIDES.map((value) => `<option value="${value}" ${value === sides ? 'selected' : ''}>${diceLabel(value)}</option>`).join('')}
         </select>
       </label>
       <span class="times">×</span>
@@ -61,14 +60,11 @@ function updateValidation() {
 }
 
 function renderResults(summary) {
-  const total = summary.reduce((sum, group) => sum + group.subtotal, 0)
-  elements.total.textContent = total
-  elements.resultGroups.innerHTML = summary.map(({ sides, values, subtotal }) => `
-    <li>
-      <span><b>${values.length}d${sides}</b>　${values.join(' + ')}</span>
-      <strong>${subtotal}</strong>
-    </li>
-  `).join('')
+  elements.resultGroups.innerHTML = summary.map((group) => {
+    const { heading, equation } = formatSummary(group)
+    return `<li><strong>${heading}</strong><span>${equation}</span></li>`
+  }).join('')
+  elements.total.textContent = formatFinalTotal(summary)
   elements.results.classList.add('is-visible')
 }
 
@@ -77,6 +73,7 @@ async function roll() {
   if (error || rolling) return
   rolling = true
   elements.roll.textContent = '投擲中…'
+  elements.config.open = false
   elements.empty.hidden = true
   elements.results.classList.remove('is-visible')
   updateValidation()

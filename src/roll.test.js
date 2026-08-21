@@ -1,6 +1,15 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { summarize, toNotation, validateGroups } from './roll.js'
+import { diceLabel, formatFinalTotal, formatSummary, summarize, toNotation, validateGroups } from './roll.js'
+
+test('uses Chinese dice names and readable result equations', () => {
+  assert.equal(diceLabel(20), '20 面骰')
+  assert.deepEqual(formatSummary({ sides: 6, values: [2, 5, 6], subtotal: 13 }), {
+    heading: '3 x 6 面骰',
+    equation: '2 + 5 + 6 = 13',
+  })
+  assert.equal(formatFinalTotal([{ subtotal: 218 }, { subtotal: 9 }]), '218 + 9 = 227')
+})
 
 test('mixed dice groups validate, map to notation, and total independently', () => {
   const groups = [{ id: 1, sides: 20, qty: 1 }, { id: 2, sides: 6, qty: 2 }]
