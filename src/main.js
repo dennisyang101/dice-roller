@@ -11,15 +11,14 @@ const elements = {
   validation: document.querySelector('#validation'),
   empty: document.querySelector('#empty-state'),
   results: document.querySelector('#results'),
+  calculation: document.querySelector('#calculation'),
   resultGroups: document.querySelector('#result-groups'),
+  calculationTotal: document.querySelector('#calculation-total'),
   total: document.querySelector('#total'),
 }
 
-let nextId = 3
-let groups = [
-  { id: 1, sides: 20, qty: 1 },
-  { id: 2, sides: 6, qty: 2 },
-]
+let nextId = 2
+let groups = [{ id: 1, sides: 20, qty: 1 }]
 let ready = false
 let rolling = false
 
@@ -64,7 +63,9 @@ function renderResults(summary) {
     const { heading, equation } = formatSummary(group)
     return `<li><strong>${heading}</strong><span>${equation}</span></li>`
   }).join('')
-  elements.total.textContent = formatFinalTotal(summary)
+  elements.total.textContent = summary.reduce((sum, { subtotal }) => sum + subtotal, 0)
+  elements.calculationTotal.textContent = formatFinalTotal(summary)
+  elements.calculation.open = false
   elements.results.classList.add('is-visible')
 }
 

@@ -12,7 +12,6 @@
         <header>
           <p class="eyebrow">TABLETOP DICE</p>
           <h1 id="app-title">骰子投擲器</h1>
-          <p class="intro">自由組合標準 RPG 骰，投擲後自動加總。</p>
         </header>
 
         <details id="dice-config" class="dice-config" open>
@@ -31,8 +30,12 @@
           <p>準備好後，按下「開始投擲」</p>
         </div>
         <section id="results" class="results" aria-live="polite">
-          <ol id="result-groups"></ol>
           <p id="total" class="final-total"></p>
+          <details id="calculation" class="calculation">
+            <summary>查看計算過程</summary>
+            <ol id="result-groups"></ol>
+            <p id="calculation-total" class="calculation-total"></p>
+          </details>
         </section>
       </section>
     </main>

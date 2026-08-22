@@ -2,10 +2,10 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { diceLabel, formatFinalTotal, formatSummary, summarize, toNotation, validateGroups } from './roll.js'
 
-test('uses Chinese dice names and readable result equations', () => {
-  assert.equal(diceLabel(20), '20 面骰')
+test('uses standard dice names and readable result equations', () => {
+  assert.equal(diceLabel(20), 'd20')
   assert.deepEqual(formatSummary({ sides: 6, values: [2, 5, 6], subtotal: 13 }), {
-    heading: '3 x 6 面骰',
+    heading: '3 x d6',
     equation: '2 + 5 + 6 = 13',
   })
   assert.equal(formatFinalTotal([{ subtotal: 218 }, { subtotal: 9 }]), '218 + 9 = 227')

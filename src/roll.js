@@ -1,7 +1,7 @@
 export const ALLOWED_SIDES = [4, 6, 8, 10, 12, 20]
 export const MAX_DICE = 20
 
-export const diceLabel = (sides) => `${sides} 面骰`
+export const diceLabel = (sides) => `d${sides}`
 
 export const formatSummary = ({ sides, values, subtotal }) => ({
   heading: `${values.length} x ${diceLabel(sides)}`,
