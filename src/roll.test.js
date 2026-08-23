@@ -11,6 +11,9 @@ test('keeps the dice configuration in place and disabled for the full roll', asy
   assert.match(html, /<fieldset id="dice-config-fields"/)
   assert.match(main, /elements\.configContainer\.inert = rolling/)
   assert.match(main, /elements\.config\.disabled = rolling/)
+  assert.match(main, /elements\.configContainer\.addEventListener\('click'/)
+  assert.match(main, /rolling && event\.target\.closest\('summary'\)/)
+  assert.match(main, /event\.preventDefault\(\)/)
   assert.doesNotMatch(main, /elements\.config\.open = false/)
 })
 

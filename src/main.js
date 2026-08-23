@@ -93,6 +93,10 @@ async function roll() {
   }
 }
 
+elements.configContainer.addEventListener('click', (event) => {
+  if (rolling && event.target.closest('summary')) event.preventDefault()
+})
+
 elements.groups.addEventListener('input', (event) => {
   const row = event.target.closest('.dice-row')
   const field = event.target.dataset.field
