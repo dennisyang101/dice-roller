@@ -30,6 +30,7 @@ h1 { margin: 0; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.08; }
 .control-panel header { margin-bottom: 30px; }
 .dice-config summary { margin-bottom: 12px; color: #d8a938; cursor: pointer; font-weight: 800; }
 .dice-config:not([open]) summary { margin-bottom: 0; }
+.dice-config-fields { min-width: 0; margin: 0; padding: 0; border: 0; }
 .dice-groups { display: grid; gap: 10px; }
 
 .dice-row {

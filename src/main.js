@@ -5,7 +5,8 @@ import { ALLOWED_SIDES, MAX_DICE, diceLabel, formatFinalTotal, formatSummary, su
 
 const elements = {
   groups: document.querySelector('#dice-groups'),
-  config: document.querySelector('#dice-config'),
+  configContainer: document.querySelector('#dice-config'),
+  config: document.querySelector('#dice-config-fields'),
   add: document.querySelector('#add-group'),
   roll: document.querySelector('#roll-button'),
   validation: document.querySelector('#validation'),
@@ -54,6 +55,8 @@ function renderGroups() {
 function updateValidation() {
   const error = validateGroups(groups)
   elements.validation.textContent = error
+  elements.configContainer.inert = rolling
+  elements.config.disabled = rolling
   elements.roll.disabled = !ready || rolling || Boolean(error)
   elements.add.disabled = rolling || groups.reduce((sum, group) => sum + group.qty, 0) >= MAX_DICE
 }
@@ -74,7 +77,6 @@ async function roll() {
   if (error || rolling) return
   rolling = true
   elements.roll.textContent = '投擲中…'
-  elements.config.open = false
   elements.empty.hidden = true
   elements.results.classList.remove('is-visible')
   updateValidation()
@@ -90,6 +92,10 @@ async function roll() {
     updateValidation()
   }
 }
+
+elements.configContainer.addEventListener('click', (event) => {
+  if (rolling && event.target.closest('summary')) event.preventDefault()
+})
 
 elements.groups.addEventListener('input', (event) => {
   const row = event.target.closest('.dice-row')
