@@ -1,6 +1,18 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { readFile } from 'node:fs/promises'
 import { diceLabel, formatFinalTotal, formatSummary, summarize, toNotation, validateGroups } from './roll.js'
+
+const source = (path) => readFile(new URL(path, import.meta.url), 'utf8')
+
+test('keeps the dice configuration in place and disabled for the full roll', async () => {
+  const [html, main] = await Promise.all([source('../index.html'), source('./main.js')])
+  assert.match(html, /<details id="dice-config"/)
+  assert.match(html, /<fieldset id="dice-config-fields"/)
+  assert.match(main, /elements\.configContainer\.inert = rolling/)
+  assert.match(main, /elements\.config\.disabled = rolling/)
+  assert.doesNotMatch(main, /elements\.config\.open = false/)
+})
 
 test('uses standard dice names and readable result equations', () => {
   assert.equal(diceLabel(20), 'd20')
