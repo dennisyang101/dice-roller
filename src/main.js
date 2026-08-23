@@ -1,7 +1,6 @@
-import DiceBox from '@3d-dice/dice-box'
-import '@3d-dice/dice-box/dist/style.css'
+import { AetherDice } from 'aether-dice'
 import './style.css'
-import { ALLOWED_SIDES, MAX_DICE, diceLabel, formatFinalTotal, formatSummary, summarize, toNotation, validateGroups } from './roll.js'
+import { ALLOWED_SIDES, MAX_DICE, createRollPlan, diceLabel, formatFinalTotal, formatSummary, summarize, validateGroups } from './roll.js'
 
 const elements = {
   groups: document.querySelector('#dice-groups'),
@@ -23,13 +22,38 @@ let groups = [{ id: 1, sides: 20, qty: 1 }]
 let ready = false
 let rolling = false
 
-const diceBox = new DiceBox('#dice-box', {
-  assetPath: '/assets/',
-  themeColor: '#d8a938',
-  enableShadows: false,
-  delay: 5,
-  scale: 5,
+const diceBox = new AetherDice({
+  container: document.querySelector('#dice-box'),
+  maxDice: MAX_DICE,
+  scale: 3,
+  gravity: 70,
+  throwForce: 5,
+  theme: {
+    dieColor: '#d8a938',
+    edgeGlow: '#edc356',
+    numberColor: '#17130a',
+    bloom: false,
+    envMap: null,
+    normalMap: null,
+  },
 })
+
+const MAX_ROLL_MS = 2200
+const RESULT_DEADLINE_MS = 2500
+// ponytail: AetherDice 0.3.0 only exposes a 600-frame cap; remove when it supports a duration option.
+diceBox._stepUntilRest = function () {
+  return new Promise((resolve) => {
+    const startedAt = performance.now()
+    const step = () => {
+      if (!this._physics) return resolve()
+      this._physics.step()
+      this._physics.containAll()
+      if (this._physics.allAtRest() || performance.now() - startedAt >= MAX_ROLL_MS) resolve()
+      else requestAnimationFrame(step)
+    }
+    requestAnimationFrame(step)
+  })
+}
 
 function renderGroups() {
   elements.groups.innerHTML = groups.map(({ id, sides, qty }, index) => `
@@ -82,8 +106,21 @@ async function roll() {
   updateValidation()
 
   try {
-    const rolls = await diceBox.roll(toNotation(groups))
-    renderResults(summarize(groups, rolls))
+    const plan = createRollPlan(groups)
+    const summary = summarize(groups, plan.rolls)
+    let resultsShown = false
+    const showResults = () => {
+      if (resultsShown) return
+      resultsShown = true
+      renderResults(summary)
+    }
+    const resultTimer = setTimeout(showResults, RESULT_DEADLINE_MS)
+    try {
+      await diceBox.roll(plan.dice, { results: plan.results })
+      showResults()
+    } finally {
+      clearTimeout(resultTimer)
+    }
   } catch (error) {
     elements.validation.textContent = `無法投擲：${error.message}`
   } finally {

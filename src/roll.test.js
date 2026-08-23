@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
-import { diceLabel, formatFinalTotal, formatSummary, summarize, toNotation, validateGroups } from './roll.js'
+import { createRollPlan, diceLabel, formatFinalTotal, formatSummary, summarize, toNotation, validateGroups } from './roll.js'
 
 const source = (path) => readFile(new URL(path, import.meta.url), 'utf8')
 
@@ -15,6 +15,35 @@ test('keeps the dice configuration in place and disabled for the full roll', asy
   assert.match(main, /rolling && event\.target\.closest\('summary'\)/)
   assert.match(main, /event\.preventDefault\(\)/)
   assert.doesNotMatch(main, /elements\.config\.open = false/)
+})
+
+test('caps animated rolls below three seconds', async () => {
+  const main = await source('./main.js')
+  assert.match(main, /const MAX_ROLL_MS = 2200/)
+  assert.match(main, /performance\.now\(\) - startedAt >= MAX_ROLL_MS/)
+  assert.match(main, /const RESULT_DEADLINE_MS = 2500/)
+  assert.match(main, /setTimeout\(showResults, RESULT_DEADLINE_MS\)/)
+})
+
+test('keeps mobile results inside the viewport', async () => {
+  const css = await source('./style.css')
+  assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.results \{[^}]*position: fixed;[^}]*bottom: max\(18px, env\(safe-area-inset-bottom\)\);[^}]*max-height: calc\(100dvh - 36px\);[^}]*overflow: auto;/)
+})
+
+test('prepares authoritative values for every rendered die', () => {
+  const values = [0, 0.5, 0.999]
+  assert.deepEqual(createRollPlan([
+    { id: 1, sides: 20, qty: 2 },
+    { id: 2, sides: 6, qty: 1 },
+  ], () => values.shift()), {
+    dice: [{ sides: 20 }, { sides: 20 }, { sides: 6 }],
+    results: [1, 11, 6],
+    rolls: [
+      { groupId: 0, value: 1 },
+      { groupId: 0, value: 11 },
+      { groupId: 1, value: 6 },
+    ],
+  })
 })
 
 test('uses standard dice names and readable result equations', () => {
