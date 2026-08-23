@@ -1,7 +1,6 @@
-import DiceBox from '@3d-dice/dice-box'
-import '@3d-dice/dice-box/dist/style.css'
+import { AetherDice } from 'aether-dice'
 import './style.css'
-import { ALLOWED_SIDES, MAX_DICE, diceLabel, formatFinalTotal, formatSummary, summarize, toNotation, validateGroups } from './roll.js'
+import { ALLOWED_SIDES, MAX_DICE, createRollPlan, diceLabel, formatFinalTotal, formatSummary, summarize, validateGroups } from './roll.js'
 
 const elements = {
   groups: document.querySelector('#dice-groups'),
@@ -23,12 +22,17 @@ let groups = [{ id: 1, sides: 20, qty: 1 }]
 let ready = false
 let rolling = false
 
-const diceBox = new DiceBox('#dice-box', {
-  assetPath: '/assets/',
-  themeColor: '#d8a938',
-  enableShadows: false,
-  delay: 5,
-  scale: 5,
+const diceBox = new AetherDice({
+  container: document.querySelector('#dice-box'),
+  maxDice: MAX_DICE,
+  theme: {
+    dieColor: '#d8a938',
+    edgeGlow: '#edc356',
+    numberColor: '#17130a',
+    bloom: false,
+    envMap: null,
+    normalMap: null,
+  },
 })
 
 function renderGroups() {
@@ -82,8 +86,9 @@ async function roll() {
   updateValidation()
 
   try {
-    const rolls = await diceBox.roll(toNotation(groups))
-    renderResults(summarize(groups, rolls))
+    const plan = createRollPlan(groups)
+    await diceBox.roll(plan.dice, { results: plan.results })
+    renderResults(summarize(groups, plan.rolls))
   } catch (error) {
     elements.validation.textContent = `無法投擲：${error.message}`
   } finally {

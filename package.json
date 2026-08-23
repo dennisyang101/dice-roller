@@ -10,9 +10,9 @@
     "android:sync": "npm run build && cap sync android"
   },
   "dependencies": {
-    "@3d-dice/dice-box": "1.1.4",
     "@capacitor/android": "8.4.2",
-    "@capacitor/core": "8.4.2"
+    "@capacitor/core": "8.4.2",
+    "aether-dice": "0.3.0"
   },
   "devDependencies": {
     "@capacitor/cli": "8.4.2",

@@ -27,6 +27,23 @@ export function toNotation(groups) {
   return groups.map(({ sides, qty }) => ({ sides: Number(sides), qty: Number(qty) }))
 }
 
+const secureRandom = () => crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32
+
+export function createRollPlan(groups, random = secureRandom) {
+  const dice = []
+  const results = []
+  const rolls = []
+  toNotation(groups).forEach(({ sides, qty }, groupId) => {
+    for (let index = 0; index < qty; index++) {
+      const value = Math.floor(random() * sides) + 1
+      dice.push({ sides })
+      results.push(value)
+      rolls.push({ groupId, value })
+    }
+  })
+  return { dice, results, rolls }
+}
+
 export function summarize(groups, rolls) {
   const valuesByGroup = new Map()
   rolls.forEach(({ groupId, value }) => {
