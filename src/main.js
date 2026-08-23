@@ -25,6 +25,9 @@ let rolling = false
 const diceBox = new AetherDice({
   container: document.querySelector('#dice-box'),
   maxDice: MAX_DICE,
+  scale: 3,
+  gravity: 70,
+  throwForce: 5,
   theme: {
     dieColor: '#d8a938',
     edgeGlow: '#edc356',

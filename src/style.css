@@ -44,11 +44,11 @@ h1 { margin: 0; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.08; }
   border-radius: 12px;
 }
 
-.row-number { align-self: center; width: 24px; height: 24px; display: grid; place-items: center; color: #8f9c8a; font-size: .75rem; border: 1px solid #4a5848; border-radius: 50%; }
+.row-number { align-self: end; width: 24px; height: 24px; margin-bottom: 7px; display: grid; place-items: center; color: #8f9c8a; font-size: .75rem; border: 1px solid #4a5848; border-radius: 50%; }
 .dice-row label { display: grid; gap: 5px; color: #8f9c8a; font-size: .68rem; }
 .dice-row select, .dice-row input { width: 100%; height: 38px; padding: 0 9px; color: #fff; background: #121712; border: 1px solid #465344; border-radius: 8px; }
 .dice-row select:focus, .dice-row input:focus, button:focus-visible { outline: 2px solid #e6b941; outline-offset: 2px; }
-.times { align-self: center; color: #798575; }
+.times { align-self: end; height: 38px; display: grid; place-items: center; color: #798575; }
 .remove-button { align-self: end; height: 38px; color: #b6c0b2; background: transparent; border: 0; border-radius: 8px; font-size: 1.35rem; }
 .remove-button:hover { color: #fff; background: #ffffff0c; }
 .text-button { width: 100%; margin: 12px 0 0; padding: 10px; color: #d8a938; background: transparent; border: 1px dashed #596456; border-radius: 10px; }
