@@ -27,7 +27,7 @@ const diceBox = new DiceBox('#dice-box', {
   assetPath: '/assets/',
   themeColor: '#d8a938',
   enableShadows: false,
-  delay: 5,
+  delay: 100, // ponytail: diagnostic spacing for slower Android WebViews
   scale: 5,
 })
 
