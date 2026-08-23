@@ -27,6 +27,7 @@ const diceBox = new DiceBox('#dice-box', {
   assetPath: '/assets/',
   themeColor: '#d8a938',
   enableShadows: false,
+  offscreen: false, // ponytail: Android WebView renders more reliably on the main thread
   delay: 5,
   scale: 5,
 })
