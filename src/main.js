@@ -38,6 +38,23 @@ const diceBox = new AetherDice({
   },
 })
 
+const MAX_ROLL_MS = 2200
+const RESULT_DEADLINE_MS = 2500
+// ponytail: AetherDice 0.3.0 only exposes a 600-frame cap; remove when it supports a duration option.
+diceBox._stepUntilRest = function () {
+  return new Promise((resolve) => {
+    const startedAt = performance.now()
+    const step = () => {
+      if (!this._physics) return resolve()
+      this._physics.step()
+      this._physics.containAll()
+      if (this._physics.allAtRest() || performance.now() - startedAt >= MAX_ROLL_MS) resolve()
+      else requestAnimationFrame(step)
+    }
+    requestAnimationFrame(step)
+  })
+}
+
 function renderGroups() {
   elements.groups.innerHTML = groups.map(({ id, sides, qty }, index) => `
     <div class="dice-row" data-id="${id}">
@@ -90,8 +107,20 @@ async function roll() {
 
   try {
     const plan = createRollPlan(groups)
-    await diceBox.roll(plan.dice, { results: plan.results })
-    renderResults(summarize(groups, plan.rolls))
+    const summary = summarize(groups, plan.rolls)
+    let resultsShown = false
+    const showResults = () => {
+      if (resultsShown) return
+      resultsShown = true
+      renderResults(summary)
+    }
+    const resultTimer = setTimeout(showResults, RESULT_DEADLINE_MS)
+    try {
+      await diceBox.roll(plan.dice, { results: plan.results })
+      showResults()
+    } finally {
+      clearTimeout(resultTimer)
+    }
   } catch (error) {
     elements.validation.textContent = `無法投擲：${error.message}`
   } finally {

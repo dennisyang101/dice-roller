@@ -83,7 +83,7 @@ h1 { margin: 0; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.08; }
   .control-panel { padding: 22px; border-right: 0; border-bottom: 1px solid #354035; }
   .control-panel header { margin-bottom: 20px; }
   .table-panel { min-height: 58vh; }
-  .results { right: 18px; bottom: 18px; width: calc(100% - 36px); }
+  .results { position: fixed; right: 18px; top: auto; bottom: max(18px, env(safe-area-inset-bottom)); width: calc(100% - 36px); max-height: calc(100dvh - 36px); overflow: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {
